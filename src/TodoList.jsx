@@ -1,23 +1,78 @@
 import IconButton from "./IconButton";
-import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
+import { FaRegTrashAlt, FaRegEdit, FaCheck } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
+import { CiSaveDown2 } from "react-icons/ci";
+import { useState } from "react";
 
 const TodoList = ({ task, dispatch }) => {
-  const halndleDelete = () => {
+  const [editText, setEditText] = useState(task.todo);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleDelete = () => {
     dispatch({
       type: "delete_task",
       id: task.id,
     });
   };
 
+  const handleStatus = (status) => {
+    const newStatus = status === "done" ? "ongoing" : "done";
+
+    dispatch({
+      type: "change_status",
+      id: task.id,
+      status: newStatus,
+    });
+  };
+
+  const handleIsEdinting = () => {
+    setIsEditing(true);
+
+    // dispatch({
+    //   type: "isEditing",
+    //   id: task.id,
+    // });
+  };
+
+  const handleEdit = () => {
+    // if (editText.trim() === "") return;
+    setIsEditing(false);
+
+    // dispatch({
+    //   type: "edit_task",
+    //   id: task.id,
+    //   todo: editText,
+    // });
+  };
+
   return (
-    <div className="flex items-center justify-between px-3 py-2 bg-customDark rounded mb-2">
-      <p className="text-white">{task.todo}</p>
+    <div className="flex items-center justify-between px-3 py-2 gap-x-2 bg-customDark rounded mb-2">
+      <p
+        className={` ${
+          task.status == "done" ? "line-through text-gray-500" : "text-white"
+        }`}
+      >
+        {task.todo}
+      </p>
       <div className="flex gap-x-2">
-        <button onClick={halndleDelete}>
-          <IconButton icon={<FaRegTrashAlt size={15} />} />
+        <button onClick={handleDelete}>
+          <IconButton icon={<FaRegTrashAlt size={15} color="red" />} />
         </button>
-        <button>
-          <IconButton icon={<FaRegEdit />} />
+        {isEditing ? (
+          <button onClick={handleEdit}>
+            <IconButton icon={<CiSaveDown2 color="orange" />} />
+          </button>
+        ) : (
+          <button onClick={handleIsEdinting}>
+            <IconButton icon={<FaRegEdit color="green" />} />
+          </button>
+        )}
+        <button onClick={() => handleStatus(task.status)}>
+          {task.status === "done" ? (
+            <IconButton icon={<RxCross2 color="yellow" />} />
+          ) : (
+            <IconButton icon={<FaCheck color="blue" />} />
+          )}
         </button>
       </div>
     </div>

@@ -4,17 +4,32 @@ export const todoReducer = (state, action) => {
       return [...state, { id: action.id, todo: action.todo }];
     }
 
+    case "isEditing": {
+      return state.map((task) =>
+        task.id === action.id ? { ...task, isEditing: !action.isEditing } : task
+      );
+    }
+
     case "edit_task": {
       return [...state, { id: action.id, todo: action.todo }];
     }
 
     case "delete_task": {
-      const newState = state.filter((task) => task.id != action.id);
-      return newState;
+      return state.filter((task) => task.id != action.id);
     }
 
     case "delete_all_task": {
       return [];
+    }
+
+    case "change_status": {
+      return state.map((task) =>
+        task.id === action.id ? { ...task, status: action.status } : task
+      );
+    }
+
+    default: {
+      return state;
     }
   }
 };

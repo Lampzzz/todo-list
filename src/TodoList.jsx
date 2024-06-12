@@ -25,26 +25,6 @@ const TodoList = ({ task, dispatch }) => {
     });
   };
 
-  const handleIsEdinting = () => {
-    setIsEditing(true);
-
-    // dispatch({
-    //   type: "isEditing",
-    //   id: task.id,
-    // });
-  };
-
-  const handleEdit = () => {
-    // if (editText.trim() === "") return;
-    setIsEditing(false);
-
-    // dispatch({
-    //   type: "edit_task",
-    //   id: task.id,
-    //   todo: editText,
-    // });
-  };
-
   return (
     <div className="flex items-center justify-between px-3 py-2 gap-x-2 bg-customDark rounded mb-2">
       <p
@@ -58,15 +38,6 @@ const TodoList = ({ task, dispatch }) => {
         <button onClick={handleDelete}>
           <IconButton icon={<FaRegTrashAlt size={15} color="red" />} />
         </button>
-        {isEditing ? (
-          <button onClick={handleEdit}>
-            <IconButton icon={<CiSaveDown2 color="orange" />} />
-          </button>
-        ) : (
-          <button onClick={handleIsEdinting}>
-            <IconButton icon={<FaRegEdit color="green" />} />
-          </button>
-        )}
         <button onClick={() => handleStatus(task.status)}>
           {task.status === "done" ? (
             <IconButton icon={<RxCross2 color="yellow" />} />

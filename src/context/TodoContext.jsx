@@ -1,34 +1,23 @@
-import { createContext, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 
-export const TodoContext = createContext(null);
-export const TodoDispatchContext = createContext(null);
+const TodoContext = createContext(null);
+const TodoDispatchContext = createContext(null);
 
-export const TodoProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(todoReducer, initialTodo);
-
-  return (
-    <TodoContext.Provider value={state}>
-      <TodoDispatchContext.Provider value={dispatch}>
-        {children}
-      </TodoDispatchContext.Provider>
-    </TodoContext.Provider>
-  );
-};
+const initialTodo = [
+  { id: 1, todo: "Home Workout", done: true },
+  { id: 2, todo: "Watering Plant", done: false },
+];
 
 const todoReducer = (state, action) => {
   switch (action.type) {
     case "add_todo": {
-      return [...state, { id: action.id, todo: action.todo }];
-    }
-
-    case "isEditing": {
-      return state.map((todo) =>
-        todo.id === action.id ? { ...todo, isEditing: !action.isEditing } : todo
-      );
+      return [...state, { id: action.id, todo: action.todo, done: false }];
     }
 
     case "edit_todo": {
-      return [...state, { id: action.id, todo: action.todo }];
+      return state.map((todo) =>
+        todo.id === action.id ? { ...todo, todo: action.todo } : todo
+      );
     }
 
     case "delete_todo": {
@@ -51,7 +40,22 @@ const todoReducer = (state, action) => {
   }
 };
 
-const initialTodo = [
-  { id: 1, todo: "Home Workout", done: true },
-  { id: 2, todo: "Watering Plant", done: false },
-];
+export const TodoProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(todoReducer, initialTodo);
+
+  return (
+    <TodoContext.Provider value={state}>
+      <TodoDispatchContext.Provider value={dispatch}>
+        {children}
+      </TodoDispatchContext.Provider>
+    </TodoContext.Provider>
+  );
+};
+
+export const useTodo = () => {
+  return useContext(TodoContext);
+};
+
+export const useDispatchTodo = () => {
+  return useContext(TodoDispatchContext);
+};
